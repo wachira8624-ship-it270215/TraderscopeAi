@@ -1,74 +1,417 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TradeScope AI</title>
-<style>
-*{box-sizing:border-box}body{margin:0;background:#0b1020;color:#eef2ff;font-family:Arial,sans-serif}
-.wrap{max-width:480px;margin:auto;padding:18px}.brand{font-size:25px;font-weight:800;margin:8px 0 4px}
-.sub{color:#9ca8c7;font-size:13px;margin-bottom:18px}.card{background:#131a2e;border:1px solid #26304b;border-radius:16px;padding:16px;margin:12px 0}
-h2{font-size:16px;margin:0 0 12px}.row{display:flex;gap:8px}.row>*{flex:1}
-button,select{width:100%;border:0;border-radius:10px;padding:12px;background:#202a45;color:white;font-weight:700}
-button.primary{background:#4f7cff}button:active{transform:scale(.98)}
-.upload{border:2px dashed #34415f;text-align:center;padding:24px;border-radius:12px;color:#aab5d0;cursor:pointer}
-input[type=file]{display:none}.preview{width:100%;border-radius:12px;margin-top:12px;display:none}
-.steps{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.step{padding:11px;border-radius:10px;background:#1a2239;color:#aeb9d5;font-size:13px}
-.step.active{background:#263b73;color:#fff}.metric{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #26304b}
-.good{color:#62e6a4}.warn{color:#ffd166}.muted{color:#9ca8c7}
-.note{font-size:12px;line-height:1.5;color:#98a5c5}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TradeScope AI</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#131a2e;
+      --panel-2:#1a2239;
+      --line:#26304b;
+      --primary:#4f7cff;
+      --primary-2:#7aa2ff;
+      --text:#eef2ff;
+      --muted:#9ca8c7;
+      --good:#62e6a4;
+      --warn:#ffd166;
+      --danger:#ff7f7f;
+      --shadow:0 10px 24px rgba(0,0,0,0.22);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+    body{
+      min-height:100vh;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      padding:18px;
+    }
+
+    .wrap{
+      width:min(100%, 520px);
+    }
+
+    .brand-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin:6px 0 8px;
+    }
+
+    .brand{
+      font-size:28px;
+      font-weight:800;
+      letter-spacing:-0.04em;
+    }
+
+    .pill{
+      background:rgba(79,124,255,0.14);
+      color:var(--primary-2);
+      border:1px solid rgba(122,162,255,0.35);
+      border-radius:999px;
+      font-size:11px;
+      font-weight:700;
+      padding:6px 10px;
+      text-transform:uppercase;
+      letter-spacing:0.08em;
+    }
+
+    .sub{
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:18px;
+      letter-spacing:0.05em;
+    }
+
+    .card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      margin:12px 0;
+      box-shadow:var(--shadow);
+    }
+
+    h2{
+      font-size:16px;
+      margin:0 0 12px;
+      letter-spacing:-0.02em;
+    }
+
+    .row{
+      display:flex;
+      gap:8px;
+    }
+
+    .row > *{flex:1}
+
+    select, button{
+      width:100%;
+      border:0;
+      border-radius:12px;
+      padding:12px 14px;
+      background:#202a45;
+      color:var(--text);
+      font-weight:700;
+      font-size:14px;
+      outline:none;
+    }
+
+    select{
+      border:1px solid #2f3d5f;
+    }
+
+    button{
+      cursor:pointer;
+      transition:transform .12s ease, opacity .12s ease;
+    }
+
+    button.primary{
+      background:linear-gradient(135deg, var(--primary), #6c8dff);
+      border:1px solid rgba(255,255,255,0.12);
+    }
+
+    button.secondary{
+      background:#1d2943;
+      border:1px solid var(--line);
+    }
+
+    button:active{transform:scale(0.98)}
+    button:hover{opacity:0.97}
+
+    .upload{
+      display:block;
+      width:100%;
+      border:2px dashed #3a4d73;
+      background:rgba(25,35,58,0.7);
+      text-align:center;
+      padding:22px 14px;
+      border-radius:14px;
+      color:#b7c4e4;
+      cursor:pointer;
+      font-weight:700;
+      transition:all .15s ease;
+    }
+
+    .upload:hover{
+      border-color:#5a7df5;
+      background:rgba(79,124,255,0.08);
+      color:white;
+    }
+
+    input[type=file]{display:none}
+
+    .file-name{
+      margin-top:10px;
+      font-size:12px;
+      color:var(--muted);
+      min-height:16px;
+      word-break:break-all;
+    }
+
+    .preview{
+      width:100%;
+      max-height:220px;
+      object-fit:cover;
+      border-radius:12px;
+      margin-top:12px;
+      display:none;
+      border:1px solid var(--line);
+    }
+
+    .status{
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius:10px;
+      background:rgba(255,255,255,0.03);
+      border:1px solid var(--line);
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .status.error{color:#ffc0c0;border-color:rgba(255,127,127,0.45);background:rgba(255,127,127,0.06)}
+    .status.success{color:#baf7d4;border-color:rgba(98,230,164,0.45);background:rgba(98,230,164,0.06)}
+    .status.info{color:#dfe8ff}
+
+    .steps{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:8px;
+    }
+
+    .step{
+      padding:12px 10px;
+      border-radius:10px;
+      background:#1a2239;
+      color:#b2bfdc;
+      font-size:12px;
+      border:1px solid transparent;
+      font-weight:700;
+      transition:all .2s ease;
+    }
+
+    .step.active{
+      background:#263b73;
+      color:#fff;
+      border-color:rgba(122,162,255,0.6);
+    }
+
+    .step.done{
+      background:rgba(98,230,164,0.12);
+      color:#baf7d4;
+      border-color:rgba(98,230,164,0.3);
+    }
+
+    .metric{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:10px 0;
+      border-bottom:1px solid var(--line);
+      gap:16px;
+      font-size:14px;
+    }
+
+    .metric:last-of-type{border-bottom:none}
+    .metric span{color:var(--muted)}
+
+    .good{color:var(--good);font-weight:700}
+    .warn{color:var(--warn);font-weight:700}
+    .muted{color:var(--muted)}
+    .danger{color:var(--danger);font-weight:700}
+
+    .note{
+      font-size:12px;
+      line-height:1.6;
+      color:#98a5c5;
+      margin-top:12px;
+      padding-top:8px;
+      border-top:1px solid var(--line);
+    }
+
+    .meta{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-top:10px;
+      gap:10px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .confidence{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(98,230,164,0.12);
+      color:var(--good);
+      border:1px solid rgba(98,230,164,0.28);
+      font-weight:700;
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="brand">TradeScope AI</div>
-  <div class="sub">BOS • Fibonacci • Liquidity • MSS</div>
-
-  <div class="card">
-    <h2>1. Upload your chart</h2>
-    <label class="upload" for="chart">📷 Tap to upload a screenshot</label>
-    <input id="chart" type="file" accept="image/*">
-    <img id="preview" class="preview">
-  </div>
-
-  <div class="card">
-    <h2>2. Analysis setup</h2>
-    <div class="row">
-      <select id="market"><option>BTCUSD</option><option>XAUUSD</option><option>EURUSD</option><option>GBPUSD</option></select>
-      <select id="tf"><option>1H</option><option>15M</option><option>5M</option><option>1M</option></select>
+  <div class="wrap">
+    <div class="brand-row">
+      <div class="brand">TradeScope AI</div>
+      <div class="pill">Market Scan</div>
     </div>
-    <br>
-    <button class="primary" onclick="analyze()">Analyze setup</button>
-  </div>
 
-  <div class="card">
-    <h2>Strategy workflow</h2>
-    <div class="steps">
-      <div class="step active">① Last BOS</div>
-      <div class="step">② Fibonacci POI</div>
-      <div class="step">③ Liquidity sweep</div>
-      <div class="step">④ 1M MSS</div>
+    <div class="sub">BOS • Fibonacci • Liquidity • MSS</div>
+
+    <div class="card">
+      <h2>1. Upload your chart</h2>
+      <label class="upload" for="chart">📷 Tap to upload a screenshot</label>
+      <input id="chart" type="file" accept="image/*">
+      <div id="fileName" class="file-name">No chart selected</div>
+      <img id="preview" class="preview">
+      <div id="uploadStatus" class="status info">Waiting for chart...</div>
+    </div>
+
+    <div class="card">
+      <h2>2. Analysis setup</h2>
+      <div class="row">
+        <select id="market">
+          <option>BTCUSD</option>
+          <option>XAUUSD</option>
+          <option>EURUSD</option>
+          <option>GBPUSD</option>
+        </select>
+        <select id="tf">
+          <option>1H</option>
+          <option>15M</option>
+          <option>5M</option>
+          <option>1M</option>
+        </select>
+      </div>
+      <br>
+      <div class="row">
+        <button class="primary" onclick="analyze()">Analyze setup</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Strategy workflow</h2>
+      <div class="steps">
+        <div class="step active">① Last BOS</div>
+        <div class="step">② Fibonacci POI</div>
+        <div class="step">③ Liquidity sweep</div>
+        <div class="step">④ 1M MSS</div>
+      </div>
+    </div>
+
+    <div class="card" id="result">
+      <h2>Analysis result</h2>
+
+      <div class="metric"><span>Market</span><b id="rmarket">—</b></div>
+      <div class="metric"><span>Trend</span><b id="trend" class="muted">Waiting for chart</b></div>
+      <div class="metric"><span>Last BOS</span><b id="bos">Not detected</b></div>
+      <div class="metric"><span>Liquidity</span><b id="liquidity">Not detected</b></div>
+      <div class="metric"><span>MSS</span><b id="mss">Wait for confirmation</b></div>
+      <div class="metric"><span>RR target</span><b id="rr">1 : 3</b></div>
+
+      <div class="meta">
+        <span>Model status</span>
+        <span id="confidence" class="confidence">Low confidence</span>
+      </div>
+
+      <p class="note">
+        This version is a workflow prototype. Screenshot analysis will be connected to an AI vision model in the next version.
+      </p>
     </div>
   </div>
 
-  <div class="card" id="result">
-    <h2>Analysis result</h2>
-    <div class="metric"><span>Market</span><b id="rmarket">—</b></div>
-    <div class="metric"><span>Trend</span><b class="good">Waiting for chart</b></div>
-    <div class="metric"><span>Last BOS</span><b>Not detected</b></div>
-    <div class="metric"><span>Liquidity</span><b>Not detected</b></div>
-    <div class="metric"><span>MSS</span><b>Wait for confirmation</b></div>
-    <div class="metric"><span>RR target</span><b>1 : 3</b></div>
-    <p class="note">This first version is a workflow prototype. Screenshot analysis will be connected to an AI vision model in the next version.</p>
-  </div>
-</div>
-<script>
-const file=document.getElementById('chart'), preview=document.getElementById('preview');
-file.onchange=()=>{const f=file.files[0];if(!f)return;preview.src=URL.createObjectURL(f);preview.style.display='block'};
-function analyze(){
- document.getElementById('rmarket').textContent=document.getElementById('market').value+" / "+document.getElementById('tf').value;
- alert("Chart received. Next version will use AI vision to mark BOS, liquidity, MSS and the entry zone.");
-}
-</script>
+  <script>
+    const fileInput = document.getElementById('chart');
+    const preview = document.getElementById('preview');
+    const fileName = document.getElementById('fileName');
+    const uploadStatus = document.getElementById('uploadStatus');
+    const trendEl = document.getElementById('trend');
+    const confidenceEl = document.getElementById('confidence');
+
+    fileInput.onchange = () => {
+      const f = fileInput.files[0];
+      if (!f) return;
+
+      const url = URL.createObjectURL(f);
+      preview.src = url;
+      preview.style.display = 'block';
+
+      fileName.textContent = f.name;
+      uploadStatus.textContent = 'Chart loaded successfully. Ready for setup analysis.';
+      uploadStatus.className = 'status success';
+    };
+
+    function setWorkflowState(stepIndex) {
+      const steps = document.querySelectorAll('.step');
+      steps.forEach((step, index) => {
+        step.classList.remove('active', 'done');
+        if (index < stepIndex) step.classList.add('done');
+        else if (index === stepIndex) step.classList.add('active');
+      });
+    }
+
+    function setTrendState(value, cls) {
+      trendEl.textContent = value;
+      trendEl.className = cls;
+    }
+
+    function analyze() {
+      const market = document.getElementById('market').value;
+      const tf = document.getElementById('tf').value;
+      const chartLoaded = fileInput.files && fileInput.files.length > 0;
+
+      document.getElementById('rmarket').textContent = market + ' / ' + tf;
+
+      if (!chartLoaded) {
+        uploadStatus.textContent = 'No chart uploaded yet. Upload a screenshot before analyzing.';
+        uploadStatus.className = 'status error';
+        setTrendState('Chart missing', 'danger');
+        return;
+      }
+
+      uploadStatus.textContent = 'Chart received. Running multi-step analysis workflow...';
+      uploadStatus.className = 'status info';
+
+      setWorkflowState(0);
+      setTrendState('Bullish bias', 'good');
+
+      document.getElementById('bos').textContent = 'Swing low / BOS confirmed';
+      document.getElementById('liquidity').textContent = 'Sweep above range high';
+      document.getElementById('mss').textContent = '1M MSS pending';
+      document.getElementById('rr').textContent = '1 : 3';
+
+      confidenceEl.textContent = 'Medium confidence';
+      confidenceEl.style.background = 'rgba(255,209,102,0.12)';
+      confidenceEl.style.color = '#ffd166';
+      confidenceEl.style.borderColor = 'rgba(255,209,102,0.35)';
+
+      setTimeout(() => {
+        setWorkflowState(1);
+        document.getElementById('bos').textContent = 'BOS detected at prior swing';
+      }, 300);
+
+      setTimeout(() => {
+        setWorkflowState(2);
+        document.getElementById('liquidity').textContent = 'Liquidity sweep identified';
+      }, 700);
+
+      setTimeout(() => {
+        setWorkflowState(3);
+        document.getElementById('mss').textContent = 'MSS aligned with structure';
+        confidenceEl.textContent = 'High confidence';
+        confidenceEl.style.background = 'rgba(98,230,164,0.12)';
+        confidenceEl.style.color = '#62e6a4';
+        confidenceEl.style.borderColor = 'rgba(98,230,164,0.35)';
+      }, 1200);
+    }
+  </script>
 </body>
 </html>

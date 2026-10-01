@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TradeScope AI</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0b1020;color:#eef2ff;font-family:Arial,sans-serif}
+.wrap{max-width:480px;margin:auto;padding:18px}.brand{font-size:25px;font-weight:800;margin:8px 0 4px}
+.sub{color:#9ca8c7;font-size:13px;margin-bottom:18px}.card{background:#131a2e;border:1px solid #26304b;border-radius:16px;padding:16px;margin:12px 0}
+h2{font-size:16px;margin:0 0 12px}.row{display:flex;gap:8px}.row>*{flex:1}
+button,select{width:100%;border:0;border-radius:10px;padding:12px;background:#202a45;color:white;font-weight:700}
+button.primary{background:#4f7cff}button:active{transform:scale(.98)}
+.upload{border:2px dashed #34415f;text-align:center;padding:24px;border-radius:12px;color:#aab5d0;cursor:pointer}
+input[type=file]{display:none}.preview{width:100%;border-radius:12px;margin-top:12px;display:none}
+.steps{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.step{padding:11px;border-radius:10px;background:#1a2239;color:#aeb9d5;font-size:13px}
+.step.active{background:#263b73;color:#fff}.metric{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #26304b}
+.good{color:#62e6a4}.warn{color:#ffd166}.muted{color:#9ca8c7}
+.note{font-size:12px;line-height:1.5;color:#98a5c5}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">TradeScope AI</div>
+  <div class="sub">BOS • Fibonacci • Liquidity • MSS</div>
+
+  <div class="card">
+    <h2>1. Upload your chart</h2>
+    <label class="upload" for="chart">📷 Tap to upload a screenshot</label>
+    <input id="chart" type="file" accept="image/*">
+    <img id="preview" class="preview">
+  </div>
+
+  <div class="card">
+    <h2>2. Analysis setup</h2>
+    <div class="row">
+      <select id="market"><option>BTCUSD</option><option>XAUUSD</option><option>EURUSD</option><option>GBPUSD</option></select>
+      <select id="tf"><option>1H</option><option>15M</option><option>5M</option><option>1M</option></select>
+    </div>
+    <br>
+    <button class="primary" onclick="analyze()">Analyze setup</button>
+  </div>
+
+  <div class="card">
+    <h2>Strategy workflow</h2>
+    <div class="steps">
+      <div class="step active">① Last BOS</div>
+      <div class="step">② Fibonacci POI</div>
+      <div class="step">③ Liquidity sweep</div>
+      <div class="step">④ 1M MSS</div>
+    </div>
+  </div>
+
+  <div class="card" id="result">
+    <h2>Analysis result</h2>
+    <div class="metric"><span>Market</span><b id="rmarket">—</b></div>
+    <div class="metric"><span>Trend</span><b class="good">Waiting for chart</b></div>
+    <div class="metric"><span>Last BOS</span><b>Not detected</b></div>
+    <div class="metric"><span>Liquidity</span><b>Not detected</b></div>
+    <div class="metric"><span>MSS</span><b>Wait for confirmation</b></div>
+    <div class="metric"><span>RR target</span><b>1 : 3</b></div>
+    <p class="note">This first version is a workflow prototype. Screenshot analysis will be connected to an AI vision model in the next version.</p>
+  </div>
+</div>
+<script>
+const file=document.getElementById('chart'), preview=document.getElementById('preview');
+file.onchange=()=>{const f=file.files[0];if(!f)return;preview.src=URL.createObjectURL(f);preview.style.display='block'};
+function analyze(){
+ document.getElementById('rmarket').textContent=document.getElementById('market').value+" / "+document.getElementById('tf').value;
+ alert("Chart received. Next version will use AI vision to mark BOS, liquidity, MSS and the entry zone.");
+}
+</script>
+</body>
+</html>

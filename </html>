@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TraderScope AI</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b1220;
+      color: white;
+    }
+
+    header {
+      background: #111c30;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #26344d;
+    }
+
+    h1 {
+      margin: 0;
+      color: #00d4ff;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .card {
+      background: #111c30;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 15px;
+      border: 1px solid #26344d;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: #00d4ff;
+      color: #06101d;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #00a9cc;
+    }
+
+    .result {
+      margin-top: 15px;
+      padding: 15px;
+      background: #0b1628;
+      border-radius: 10px;
+      line-height: 1.7;
+    }
+
+    .green {
+      color: #20e090;
+    }
+
+    .yellow {
+      color: #ffd166;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>TraderScope AI</h1>
+  <p>AI Trading Chart Analyzer</p>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>📊 Market Analysis</h2>
+    <p>Analyze your trading setup using price action concepts.</p>
+
+    <button onclick="analyzeChart()">
+      Analyze Chart
+    </button>
+
+    <div id="result" class="result">
+      Waiting for analysis...
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Strategy</h2>
+    <p>Liquidity → MSS → FVG → Entry</p>
+  </div>
+
+  <div class="card">
+    <h2>📈 Timeframes</h2>
+    <p>Higher Timeframe: 1H</p>
+    <p>Confirmation: 15M</p>
+    <p>Entry: 5M / 1M</p>
+  </div>
+
+</div>
+
+<script>
+
+function analyzeChart() {
+
+  document.getElementById("result").innerHTML = `
+    <strong>Market Analysis</strong><br><br>
+
+    🔎 Liquidity: <span class="yellow">Waiting for sweep</span><br>
+
+    📌 Market Structure: <span class="yellow">Waiting for MSS</span><br>
+
+    💎 FVG: <span class="yellow">Not confirmed</span><br>
+
+    🎯 Entry: <span class="yellow">Wait for confirmation</span><br><br>
+
+    <span class="green">
+    Risk management: Always use a stop loss.
+    </span>
+  `;
+
+}
+
+</script>
+
+</body>
+</html>
